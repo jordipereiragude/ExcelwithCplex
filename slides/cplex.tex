@@ -307,64 +307,241 @@
 	
 	\only<1>
 	{
-		Podemos descargar la hoja de cálculo inicial para hacer el ejercicio de: . 
+		Podemos descargar la hoja de cálculo inicial para hacer el ejercicio de \href{https://github.com/jordipereiragude/ExcelwithCplex/blob/master/workbooks/uls_empty.xlsx}{goo.gl/n919co}
 	}
 	\only<2>
 	{		
-		La versión finalizada puede verse en: 	
+		La versión finalizada puede descargarse de \href{https://github.com/jordipereiragude/ExcelwithCplex/blob/master/workbooks/uls.xlsx}{goo.gl/xyVyzr}	
 	}
 	\begin{figure}
 	\includegraphics[width=0.30\textwidth]{figuras/corte3}
-\end{figure}
+	\end{figure}
 	
 }
 
 \frame[t]{ % Ejemplo 2
 	\frametitle{Ejemplo SCP (versión 1)}
 	
-	\begin{enumerate}
-	\item De forma parecida al caso anterior, podemos resolver el modelo de cubrimiento. Descargar hoja de cálculo de XXX y de XXX para la hoja completa. 
+	\begin{itemize}\itemsep1ex
+	\item De forma parecida al caso anterior, podemos resolver el modelo de cubrimiento. Descargar hoja de cálculo de \href{https://github.com/jordipereiragude/ExcelwithCplex/blob/master/workbooks/scp_empty.xlsx}{goo.gl/8M46Ry} y de \href{https://github.com/jordipereiragude/ExcelwithCplex/blob/master/workbooks/scp.xlsx}{goo.gl/fFw9Tj} para la hoja completa. 
 	\item En este caso podemos visualizar que la técnica anterior no escala bien para problemas grandes ni formulaciones en que la matriz $A$ está formada mayoritariamente por entradas iguales 0 (lo que se entiende como una matriz dispersa).
-	\item Aquí es cuando se aprecia la oportunidad de mejorar el problema construyendo el modelo de forma programática
-	\end{enumerate}
+	\item Aquí es cuando se aprecia la oportunidad de mejorar el flujo de trabajo construyendo el modelo de forma programática.
+	\end{itemize}
+}
+
+\frame[t]{ % Ejemplo 2
+	\frametitle{Utilizando macros}
+
+	\begin{itemize}\itemsep1ex
+		\item	Generalmente, la información del modelo anterior se hubiera entregado como una lista de costos y otra de no-ceros.
+		\item Partiendo de esas listas podemos construir el modelo matemático.
+		\item Vamos a usar macros de Excel (lenguaje Visual Basic for Applications).
+	\end{itemize}
+\vfill
+
+	No se preocupen, pueden bajar el archivo directamente (\href{https://github.com/jordipereiragude/ExcelwithCplex/blob/master/workbooks/scp-vba.xlsm}{goo.gl/6v72sD}) y podemos analizar el código paso a paso.
+}
+
+\frame[t]{ % Ejemplo 2
+	\frametitle{Ejemplo SCP (versión 2)}
+
+	\begin{textblock*}{\paperwidth}(0in,0.5in)
+	\begin{figure}
+	\includegraphics[width=1\textwidth]{figuras/corte4}
+	\end{figure}
+	\end{textblock*}
 }
 
 
 \section{OPL+Excel} 
 \subsection{}
 \frame[t]{ %Truncated enumeration [1]
-	\frametitle{BBB}
+	\frametitle{Introducción}
 
-	Tradicionalmente, las precedencias se relajan y el modelo resultante es una cota inferior.
+	\textbf{Pros:}
 
-	\begin{align}
-\min &  \sum_{q\in \mathcal{Q}} \bar{c}_{q} z_{q}  & \\
-s.t:	&  \sum_{q\in \mathcal{Q}} q_i~ z_{q} =1  & \forall i\in V \\
-&  z_{q} \in \{0,1\}  &  \forall q\in Q,k\in K 
-\end{align} 
-\vfill
-Si quisiéramos usar esta formulación para resolver el problema, deberíamos hacer cumplir las precedencias entre asignaciones de forma auxiliar.
+\begin{itemize}\itemsep1ex
+	\item Es la forma recomendada por IBM.
+	\item Puede integrarse de forma ``profesional" (a costa de programar un poco).
+	\item Proporciona un modelizador.
+\end{itemize}
+
+\textbf{Contras:}
+
+\begin{itemize}\itemsep1ex
+	\item La curva de aprendizaje es un poco mayor.
+	\item El trabajo se hace fuera de Excel.
+\end{itemize}
+}
+
+\frame[t]{ %Modus operandi
+		\frametitle{Modus Operandi}
+			
+	\begin{textblock*}{\paperwidth}(0in,0.5in)
+	\begin{figure}
+		\includegraphics[height=0.85\textheight]{figuras/corte5}
+	\end{figure}
+	\end{textblock*}
+
+	\begin{textblock*}{0.25\paperwidth}(0.25in,1.6in)
+		Archivos abiertos en editor
+	\end{textblock*}
+
+	\begin{textblock*}{0.25\paperwidth}(2in,1.6in)
+	Editor de textos
+\end{textblock*}
+
+	\begin{textblock*}{0.25\paperwidth}(2in,2.6in)
+	Resultados e información de ejecución
+	\end{textblock*}
+
+	\begin{textblock*}{0.25\paperwidth}(3.8in,1.4in)
+	Elementos del modelo encontrados
+	\end{textblock*}
 
 }
 
 
-\section{JuMP+Excel} 
+\frame[t]{ %Modus operandi
+	\frametitle{Entorno de trabajo}
+	
+	\begin{itemize}\itemsep1ex
+		\item OPL estructura la información en dos partes: \textbf{Modelo} y \textbf{Datos}. 
+		\item La parte de modelo se divide en tres partes: lectura de datos, modelo matemático (las ecuaciones) y escritura de datos
+		\item La fuente de datos para la lectura y escritura son un archivo de texto (por defecto)
+		\item Haremos que el archivo de texto sea una hoja de Excel.
+	\end{itemize}
+	Podemos descargar un zip con todos los archivos necesarios de \href{https://github.com/jordipereiragude/ExcelwithCplex/blob/master/workbooks/uls_opl.zip}{http://goo.gl/oSWy1M}
+}
+
+\frame[t]{ %Modus operandi
+	\frametitle{Código del modelo (independiente del archivo)}
+	\begin{textblock*}{\paperwidth}(0in,0.5in)
+	\begin{figure}
+		\includegraphics[height=0.65\textheight]{figuras/corte6}
+	\end{figure}
+\end{textblock*}
+}
+
+\frame[t]{ %Modus operandi
+	\frametitle{Entrada y salida del modelo}
+	\begin{textblock*}{\paperwidth}(0in,0.5in)
+		\begin{figure}
+			\includegraphics[height=0.6\textheight]{figuras/corte7}
+		\end{figure}
+	\end{textblock*}
+
+	\begin{textblock*}{0.85\paperwidth}(0.25in,3in)
+		Vayan con cuidado, es necesario que el archivo Excel esté cerrado
+	\end{textblock*}
+}
+
+\frame[t]{ %Modus operandi
+	\frametitle{Nombres en Excel}
+	
+	Hemos tenido que poner nombres a las casillas en Excel. Esto se puede conseguir usando el botón derecho y escogiendo el nombre. Así hemos definido las zonas para la solución y la lectura de datos:
+	
+	\begin{itemize}
+		\item nPeriodos
+		\item costeLanzamiento
+		\item costePosesion
+		\item demanda
+		\item variableX, variableY, variableS,objetivo
+	\end{itemize}
+}
+
+\frame[t]{ %Modus operandi
+	\frametitle{Ejercicio}
+	
+	Hagamos el mismo proceso con el problema de cubrimiento.
+	
+}
+
+
+\section{JuMP (+Excel)}
+ 
 \subsection{}
 \frame[t]{ %Truncated enumeration [1]
-	\frametitle{CCC}
+	\frametitle{Introducción}
 	
-	Tradicionalmente, las precedencias se relajan y el modelo resultante es una cota inferior.
+	\begin{itemize}
+	\item Personalmente no uso ninguna de las soluciones anterioress.
+	\item Recientemente han aparecido diversas opciones para facilitar el trabajo con modelos matemáticos.
+	\item Mi favorita es Julia/JuMP. No es exactamente una forma de trabajar con Excel y Cplex pero puede integrarse con las anteriores.	
+	\end{itemize}	
+
+\textbf{Pros:}
+	\begin{itemize}
+		\item Lenguaje moderno completo.
+		\item Un modelizador que integra directamente con el lenguaje (importante para usar algoritmos ``complejos" como branch and cut, Dantzig-Wolfe,...).
+		\item ``Solver agnostic".
+		\item Podemos practicar sin necesidad de tener instalado un solver.
+	\end{itemize}
+
+}
+
+\frame[t]{ %Truncated enumeration [1]
+	\frametitle{Online}
 	
-	\begin{align}
-		\min &  \sum_{q\in \mathcal{Q}} \bar{c}_{q} z_{q}  & \\
-		s.t:	&  \sum_{q\in \mathcal{Q}} q_i~ z_{q} =1  & \forall i\in V \\
-		&  z_{q} \in \{0,1\}  &  \forall q\in Q,k\in K 
-	\end{align} 
-	\vfill
-	Si quisiéramos usar esta formulación para resolver el problema, deberíamos hacer cumplir las precedencias entre asignaciones de forma auxiliar.
+	Podemos ejecutar Julia desde una página web utilizando \href{www.juliabox.com}{www.juliabox.com} y una cuenta google (o ucn.cl)
+	
+		\begin{textblock*}{\paperwidth}(0in,1.5in)
+		\begin{figure}
+			\includegraphics[width=0.5\textwidth]{figuras/juliacloudlogo}
+		\end{figure}
+	\end{textblock*}
+}
+
+\frame[t]{ %Truncated enumeration [1]
+	\frametitle{Offline}
+	
+	\begin{itemize}
+	\item Podemos ejecutar Julia de varias maneras (línea de comando, Jupyter local, Juno ...)
+	\item Podemos ejecutar diferentes solvers de programación lineal (Cplex, Gurobi, GLPK) cambiando únicamente una línea del archivo.
+	\end{itemize}
+
+	\begin{itemize}
+		\item Los primeros ejemplos lo vamos a hacer desde Jupyter local.  	Descargar un ejemplo simple de \href{https://raw.githubusercontent.com/jordipereiragude/ExcelwithCplex/master/workbooks/Ejemplo-Simple-JuMP.ipynb}{goo.gl/4yFCwM}
+	\end{itemize}
+}
+
+\frame[t]{ %Truncated enumeration [1]
+	\frametitle{Modelo ``as-is"}
+
+	\begin{textblock*}{\paperwidth}(0in,0.5in)
+	\begin{figure}
+		\includegraphics[height=0.85\textheight]{figuras/corte8}
+	\end{figure}
+\end{textblock*}
 	
 }
 
+\frame[t]{ %Truncated enumeration [1]
+	\frametitle{Modelo inventarios}
 
- 
+Descargar de \href{https://raw.githubusercontent.com/jordipereiragude/ExcelwithCplex/master/workbooks/ULS.ipynb}{goo.gl/DzTY8v}
+
+	\begin{textblock*}{\paperwidth}(0in,0.75in)
+		\begin{figure}
+			\includegraphics[height=0.8\textheight]{figuras/corte9}
+		\end{figure}
+	\end{textblock*}
+	
+}
+
+\frame[t]{ %Truncated enumeration [1]
+	\frametitle{Integración con Excel}
+	
+	Podemos trabajar directamente desde Excel para ello:
+	
+	\begin{itemize}
+	\item Escribir la rutina en un archivo .jl
+	\item Crear la macro que llama el archivo .jl
+	\item Leer el archivo generado por julia y guardarlo en la hoja de Excel
+	\end{itemize}
+
+	\textbf{El paso más complejo es personalizar las rutas hacia y desde los archivos}. El problema es algo tedioso pero no difícil. 
+	
+	Por si acaso el excel (\href{https://github.com/jordipereiragude/ExcelwithCplex/blob/master/workbooks/uls_juliaDentroExcel.xlsm}{goo.gl/UHE9Dn}) y el archivo julia (\href{https://raw.githubusercontent.com/jordipereiragude/ExcelwithCplex/master/workbooks/uls.jl}{goo.gl/gj9zZw})
+} 
 \end{document}
